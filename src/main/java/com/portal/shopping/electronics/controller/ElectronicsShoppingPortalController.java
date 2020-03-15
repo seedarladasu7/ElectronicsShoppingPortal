@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.portal.shopping.electronics.dto.ProductsDTO;
-import com.portal.shopping.electronics.entity.Purchase;
 import com.portal.shopping.electronics.model.ProductToCartRequest;
+import com.portal.shopping.electronics.model.PurchaseDetails;
 import com.portal.shopping.electronics.model.PurchaseRequest;
 import com.portal.shopping.electronics.service.ElectronicsShoppingService;
 
@@ -44,7 +44,7 @@ public class ElectronicsShoppingPortalController {
 	}
 
 	@GetMapping(value = { "/orders/{userId}" })
-	public ResponseEntity<List<Purchase>> getUserOrders(@PathVariable(name = "userId") Integer userId) {
+	public ResponseEntity<PurchaseDetails> getUserOrders(@PathVariable(name = "userId") Integer userId) {
 		return new ResponseEntity<>(service.getUserOrders(userId), HttpStatus.OK);
 
 	}

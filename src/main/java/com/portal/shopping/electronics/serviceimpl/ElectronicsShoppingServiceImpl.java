@@ -7,11 +7,14 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.portal.shopping.electronics.dto.CartProductDTO;
 import com.portal.shopping.electronics.dto.ProductsDTO;
+import com.portal.shopping.electronics.dto.PurchaseDataDTO;
 import com.portal.shopping.electronics.entity.Cart;
 import com.portal.shopping.electronics.entity.CartProduct;
 import com.portal.shopping.electronics.entity.DeliveryMode;
@@ -24,6 +27,7 @@ import com.portal.shopping.electronics.exceptionclasses.InvalidUserException;
 import com.portal.shopping.electronics.exceptionclasses.RecordInsertionException;
 import com.portal.shopping.electronics.model.ProductAndQuantity;
 import com.portal.shopping.electronics.model.ProductToCartRequest;
+import com.portal.shopping.electronics.model.PurchaseDetails;
 import com.portal.shopping.electronics.model.PurchaseRequest;
 import com.portal.shopping.electronics.repository.CartRepository;
 import com.portal.shopping.electronics.repository.DeliveryModeRepository;
@@ -78,7 +82,7 @@ public class ElectronicsShoppingServiceImpl implements ElectronicsShoppingServic
 		try {
 			Cart cart = new Cart();
 
-			cart.setUserId(request.getUserId());
+			cart.setUpdatedOn(dateTime.format(new java.util.Date()));
 
 			List<Integer> iProdIds = request.getProductsList().stream().map(ProductAndQuantity::getProductId)
 					.collect(Collectors.toList());
@@ -131,9 +135,9 @@ public class ElectronicsShoppingServiceImpl implements ElectronicsShoppingServic
 
 			purchase.setPurchaseOn(dateTime.format(new java.util.Date()));
 
-			purchase.setCartId(cartOpt.get().getCartId());
-			purchase.setPaymentModeId(payModeOpt.get().getPaymentModeId());
-			purchase.setDeliveryModeId(deliveryModeOpt.get().getDeliveryModeId());
+			purchase.setCart(cartOpt.get());
+			purchase.setPaymentMode(payModeOpt.get());
+			purchase.setDeliveryMode(deliveryModeOpt.get());
 			purchase.setUser(userOpt.get());
 			purchaseRepository.saveAndFlush(purchase);
 
@@ -141,17 +145,40 @@ public class ElectronicsShoppingServiceImpl implements ElectronicsShoppingServic
 			throw new RecordInsertionException(e.getMessage());
 		}
 	}
-	
+
 	@Override
-	public List<Purchase> getUserOrders(Integer userId) {
-		
+	public PurchaseDetails getUserOrders(Integer userId) {
+
+		List<Purchase> purchases = new ArrayList<>();
 		Optional<User> user = userRepository.findById(userId);
-		
-		if(user.isPresent()) {
-			purchaseRepository.findByUser(user.get());
+
+		if (user.isPresent()) {
+			purchases = purchaseRepository.findByUser(user.get());
 		}
 
-		return new ArrayList<>();
+		PurchaseDetails purchaseDetails = new PurchaseDetails();
+
+		if (StringUtils.isEmpty(purchaseDetails.getUserName())) {
+			purchaseDetails.setUserName(purchases.get(0).getUser().getUserName());
+		}
+		List<PurchaseDataDTO> purchaseDataList = new ArrayList<>();
+		purchases.stream().forEach(purchase -> {
+			List<CartProduct> cartProducts = purchase.getCart().getCartProducts();
+			List<CartProductDTO> cartProdList = cartProducts.stream()
+					.map(cartProd -> new CartProductDTO(
+							productRepository.findById(cartProd.getProductId()).get().getProductName(),
+							cartProd.getQuantity(), cartProd.getPrice()))
+					.collect(Collectors.toList());
+			
+			PurchaseDataDTO pDataDTO = new PurchaseDataDTO(purchase.getPurchaseOn(),
+					purchase.getPaymentMode().getPaymentModeName(), purchase.getDeliveryMode().getDeliveryModeName(),
+					cartProdList);
+			purchaseDataList.add(pDataDTO);
+
+		});
+
+		purchaseDetails.setPurchaseData(purchaseDataList);
+		return purchaseDetails;
 
 	}
 

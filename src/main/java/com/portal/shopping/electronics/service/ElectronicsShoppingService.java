@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import com.portal.shopping.electronics.dto.ProductsDTO;
-import com.portal.shopping.electronics.entity.Purchase;
 import com.portal.shopping.electronics.model.ProductToCartRequest;
+import com.portal.shopping.electronics.model.PurchaseDetails;
 import com.portal.shopping.electronics.model.PurchaseRequest;
 
 public interface ElectronicsShoppingService {
@@ -19,6 +19,6 @@ public interface ElectronicsShoppingService {
 	public void confirmPurchase(PurchaseRequest request);
 	
 	//UserOrderService
-	public List<Purchase> getUserOrders(Integer userId);
+	public PurchaseDetails getUserOrders(Integer userId);
 	
 }

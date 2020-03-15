@@ -29,4 +29,12 @@ insert into delivery_mode (delivery_mode_name) values ('Home delivery');
 insert into delivery_mode (delivery_mode_name) values ('Two man delivery');
 insert into delivery_mode (delivery_mode_name) values ('Locker system');
 
+ALTER TABLE cart ALTER cart_id SET DEFAULT 0;
+ALTER TABLE cart_product ALTER product_id SET DEFAULT 0;
+ALTER TABLE product ALTER product_id SET DEFAULT 0;
+ALTER TABLE user ALTER user_id SET DEFAULT 0;
+ALTER TABLE purchase ALTER COLUMN purchase_id SET DEFAULT 0;
+ALTER TABLE payment_mode ALTER COLUMN payment_mode_id SET DEFAULT 0;
+ALTER TABLE delivery_mode ALTER COLUMN delivery_mode_id SET DEFAULT 0;
+
 COMMIT;
