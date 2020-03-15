@@ -131,10 +131,10 @@ public class ElectronicsShoppingServiceImpl implements ElectronicsShoppingServic
 
 			purchase.setPurchaseOn(dateTime.format(new java.util.Date()));
 
-			purchase.setCart(cartOpt.get());
-			purchase.setPaymentMode(payModeOpt.get());
-			purchase.setDeliveryMode(deliveryModeOpt.get());
-
+			purchase.setCartId(cartOpt.get().getCartId());
+			purchase.setPaymentModeId(payModeOpt.get().getPaymentModeId());
+			purchase.setDeliveryModeId(deliveryModeOpt.get().getDeliveryModeId());
+			purchase.setUser(userOpt.get());
 			purchaseRepository.saveAndFlush(purchase);
 
 		} catch (Exception e) {
@@ -144,8 +144,14 @@ public class ElectronicsShoppingServiceImpl implements ElectronicsShoppingServic
 	
 	@Override
 	public List<Purchase> getUserOrders(Integer userId) {
+		
+		Optional<User> user = userRepository.findById(userId);
+		
+		if(user.isPresent()) {
+			purchaseRepository.findByUser(user.get());
+		}
 
-		return purchaseRepository.findByUserId(userId);
+		return new ArrayList<>();
 
 	}
 

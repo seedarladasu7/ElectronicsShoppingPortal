@@ -28,19 +28,19 @@ public class Purchase {
 	private Integer purchaseId;
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "cart_id", insertable = false, updatable = false)
+	@JoinColumn(name = "cart_id", insertable = false, updatable = false, nullable = false)
 	private Cart cart;
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "payment_mode_id", insertable = false, updatable = false)
+	@JoinColumn(name = "payment_mode_id", insertable = false, updatable = false, nullable = false)
 	private PaymentMode paymentMode;
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "delivery_mode_id", insertable = false, updatable = false)
+	@JoinColumn(name = "delivery_mode_id", insertable = false, updatable = false, nullable = false)
 	private DeliveryMode deliveryMode;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "user_id", insertable = false, updatable = false)
+	@JoinColumn(name = "user_id", insertable = false, updatable = false, nullable = false)
 	private User user;
 	
 	@Column
