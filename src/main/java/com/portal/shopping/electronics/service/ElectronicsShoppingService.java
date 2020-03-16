@@ -12,10 +12,10 @@ public interface ElectronicsShoppingService {
 	public ProductsResponse getElectronicProducts(Optional<String> productName);
 	
 	//CartService
-	public void addElectronicProductsToCart(ProductToCartRequest request);
+	public String addElectronicProductsToCart(ProductToCartRequest request);
 	
 	//PurchaseService
-	public void confirmPurchase(PurchaseRequest request);
+	public String confirmPurchase(PurchaseRequest request);
 	
 	//UserOrderService
 	public PurchaseDetails getUserOrders(Integer userId);

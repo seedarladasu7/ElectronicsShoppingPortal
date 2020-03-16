@@ -32,14 +32,12 @@ public class ElectronicsShoppingPortalController {
 
 	@PostMapping("/addToCart")
 	public ResponseEntity<String> addProductsToCart(@RequestBody ProductToCartRequest request) {
-		service.addElectronicProductsToCart(request);
-		return new ResponseEntity<>("Product(s) added to cart successfully...", HttpStatus.ACCEPTED);
+		return new ResponseEntity<>(service.addElectronicProductsToCart(request), HttpStatus.ACCEPTED);
 	}
 
 	@PostMapping("/purchageCart")
 	public ResponseEntity<String> purchageCartProducts(@RequestBody PurchaseRequest request) {
-		service.confirmPurchase(request);
-		return new ResponseEntity<>("Order placed successfully...", HttpStatus.ACCEPTED);
+		return new ResponseEntity<>(service.confirmPurchase(request), HttpStatus.ACCEPTED);
 	}
 
 	@GetMapping(value = { "/orders/{userId}" })

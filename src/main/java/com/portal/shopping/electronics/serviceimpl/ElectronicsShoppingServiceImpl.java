@@ -59,7 +59,7 @@ public class ElectronicsShoppingServiceImpl implements ElectronicsShoppingServic
 	@Autowired
 	PurchaseRepository purchaseRepository;
 
-	private static SimpleDateFormat dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private static SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	@Override
 	public ProductsResponse getElectronicProducts(Optional<String> productName) {
@@ -78,12 +78,12 @@ public class ElectronicsShoppingServiceImpl implements ElectronicsShoppingServic
 	}
 
 	@Override
-	public void addElectronicProductsToCart(ProductToCartRequest request) {
+	public String addElectronicProductsToCart(ProductToCartRequest request) {
 
 		try {
 			Cart cart = new Cart();
 
-			cart.setUpdatedOn(dateTime.format(new java.util.Date()));
+			cart.setUpdatedOn(dateTimeFormatter.format(new java.util.Date()));
 
 			List<Integer> iProdIds = request.getProductsList().stream().map(ProductAndQuantity::getProductId)
 					.collect(Collectors.toList());
@@ -107,13 +107,15 @@ public class ElectronicsShoppingServiceImpl implements ElectronicsShoppingServic
 			cart.setCartProducts(cartProdList);
 
 			cartRepository.saveAndFlush(cart);
+			
+			return "Product(s) added to cart successfully...";
 		} catch (Exception e) {
 			throw new RecordInsertionException(e.getMessage());
 		}
 	}
 
 	@Override
-	public void confirmPurchase(PurchaseRequest request) {
+	public String confirmPurchase(PurchaseRequest request) {
 		try {
 
 			Optional<User> userOpt = userRepository.findById(request.getUserId());
@@ -134,13 +136,14 @@ public class ElectronicsShoppingServiceImpl implements ElectronicsShoppingServic
 
 			Purchase purchase = new Purchase();
 
-			purchase.setPurchaseOn(dateTime.format(new java.util.Date()));
+			purchase.setPurchaseOn(dateTimeFormatter.format(new java.util.Date()));
 
 			purchase.setCart(cartOpt.get());
 			purchase.setPaymentMode(payModeOpt.get());
 			purchase.setDeliveryMode(deliveryModeOpt.get());
 			purchase.setUser(userOpt.get());
 			purchaseRepository.saveAndFlush(purchase);
+			return "Order placed successfully...";
 
 		} catch (Exception e) {
 			throw new RecordInsertionException(e.getMessage());
