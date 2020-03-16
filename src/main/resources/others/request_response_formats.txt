@@ -27,4 +27,7 @@ POST - http://localhost:8080/ElectronicsShoppingPortal/purchageCart
 		
 
 http://localhost:8080/ElectronicsShoppingPortal/orders/2
+
+
+http://localhost:8080/ElectronicsShoppingPortal/swagger-ui.html
 				
