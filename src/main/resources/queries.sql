@@ -2,7 +2,7 @@ INSERT INTO product (product_name, price) VALUES ('Mobile', 15000);
 INSERT INTO product (product_name, price) VALUES ('Television', 25000);
 INSERT INTO product (product_name, price) VALUES ('Computer', 35000);
 INSERT INTO product (product_name, price) VALUES ('IPad', 20000);
-INSERT INTO product (product_name, price) VALUES ('Refridgerator', 24000);
+INSERT INTO product (product_name, price) VALUES ('Refrigerator', 24000);
 INSERT INTO product (product_name, price) VALUES ('Air-Cooler', 40000);
 INSERT INTO product (product_name, price) VALUES ('Cooker', 5000);
 INSERT INTO product (product_name, price) VALUES ('Fan', 2000);
