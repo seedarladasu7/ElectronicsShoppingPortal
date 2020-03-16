@@ -14,6 +14,7 @@ public class PurchaseDataDTO {
 	private String orderPlacedOn;
 	private String paymentMode;
 	private String deliveryMode;
+	private String cartUpdatedOn;
 	private List<CartProductDTO> cartProducts;
 
 }

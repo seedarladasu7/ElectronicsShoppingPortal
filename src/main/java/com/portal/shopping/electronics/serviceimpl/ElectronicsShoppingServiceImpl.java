@@ -13,7 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.portal.shopping.electronics.dto.CartProductDTO;
-import com.portal.shopping.electronics.dto.ProductsDTO;
+import com.portal.shopping.electronics.dto.ProductDTO;
 import com.portal.shopping.electronics.dto.PurchaseDataDTO;
 import com.portal.shopping.electronics.entity.Cart;
 import com.portal.shopping.electronics.entity.CartProduct;
@@ -27,6 +27,7 @@ import com.portal.shopping.electronics.exceptionclasses.InvalidUserException;
 import com.portal.shopping.electronics.exceptionclasses.RecordInsertionException;
 import com.portal.shopping.electronics.model.ProductAndQuantity;
 import com.portal.shopping.electronics.model.ProductToCartRequest;
+import com.portal.shopping.electronics.model.ProductsResponse;
 import com.portal.shopping.electronics.model.PurchaseDetails;
 import com.portal.shopping.electronics.model.PurchaseRequest;
 import com.portal.shopping.electronics.repository.CartRepository;
@@ -61,7 +62,7 @@ public class ElectronicsShoppingServiceImpl implements ElectronicsShoppingServic
 	private static SimpleDateFormat dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	@Override
-	public List<ProductsDTO> getElectronicProducts(Optional<String> productName) {
+	public ProductsResponse getElectronicProducts(Optional<String> productName) {
 		List<Product> productsList = null;
 
 		if (productName.isPresent()) {
@@ -70,10 +71,10 @@ public class ElectronicsShoppingServiceImpl implements ElectronicsShoppingServic
 			productsList = productRepository.findAll(Sort.by("productName"));
 		}
 
-		return productsList.stream()
-				.map(product -> new ProductsDTO(product.getProductId(), product.getProductName(), product.getPrice()))
+		List<ProductDTO> products = productsList.stream()
+				.map(product -> new ProductDTO(product.getProductId(), product.getProductName(), product.getPrice()))
 				.collect(Collectors.toList());
-
+		return new ProductsResponse(products);
 	}
 
 	@Override
@@ -163,18 +164,17 @@ public class ElectronicsShoppingServiceImpl implements ElectronicsShoppingServic
 		}
 		List<PurchaseDataDTO> purchaseDataList = new ArrayList<>();
 		purchases.stream().forEach(purchase -> {
-			List<CartProduct> cartProducts = purchase.getCart().getCartProducts();
-			List<CartProductDTO> cartProdList = cartProducts.stream()
+			Cart cart = purchase.getCart();
+			List<CartProductDTO> cartProdList = cart.getCartProducts().stream()
 					.map(cartProd -> new CartProductDTO(
 							productRepository.findById(cartProd.getProductId()).get().getProductName(),
 							cartProd.getQuantity(), cartProd.getPrice()))
 					.collect(Collectors.toList());
 			
 			PurchaseDataDTO pDataDTO = new PurchaseDataDTO(purchase.getPurchaseOn(),
-					purchase.getPaymentMode().getPaymentModeName(), purchase.getDeliveryMode().getDeliveryModeName(),
+					purchase.getPaymentMode().getPaymentModeName(), purchase.getDeliveryMode().getDeliveryModeName(), cart.getUpdatedOn(),
 					cartProdList);
 			purchaseDataList.add(pDataDTO);
-
 		});
 
 		purchaseDetails.setPurchaseData(purchaseDataList);

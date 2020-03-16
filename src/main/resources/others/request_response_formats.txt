@@ -1,0 +1,30 @@
+GET - http://localhost:8080/ElectronicsShoppingPortal/products
+
+POST - http://localhost:8080/ElectronicsShoppingPortal/addToCart
+		{
+
+			"userId":"2",
+			"productsList" : [
+					{
+						"quantity":"3",
+						"productId": "7"
+					},
+					{
+						"quantity":"4",
+						"productId": "3"
+					}
+				]
+		}
+		
+
+POST - http://localhost:8080/ElectronicsShoppingPortal/purchageCart
+		{
+			"cartId":"3",
+			"paymentModeId":"6",
+			"deliveryModeId":"2",
+			"userId":"2"
+		}
+		
+
+http://localhost:8080/ElectronicsShoppingPortal/orders/2
+				

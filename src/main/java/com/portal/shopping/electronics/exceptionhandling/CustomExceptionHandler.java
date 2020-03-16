@@ -27,16 +27,16 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 	public final ResponseEntity<ErrorResponse> handleUserNotFoundException(RecordNotFoundException ex) {
 		List<String> details = new ArrayList<>();
 		details.add(ex.getLocalizedMessage());
-		ErrorResponse error = new ErrorResponse("Record Not Found", details);
-		return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+		ErrorResponse error = new ErrorResponse("Server Error - Record Not Found", details);
+		return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	@ExceptionHandler(RecordInsertionException.class)
 	public final ResponseEntity<ErrorResponse> handleUserInsertionException(RecordInsertionException ex) {
 		List<String> details = new ArrayList<>();
 		details.add(ex.getLocalizedMessage());
-		ErrorResponse error = new ErrorResponse("Record Insertion Not Successful", details);
-		return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+		ErrorResponse error = new ErrorResponse("Server Error - Record Insertion Not Successful", details);
+		return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 }
